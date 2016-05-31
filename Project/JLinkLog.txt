@@ -1,0 +1,26 @@
+
+T1A58 000:606 SEGGER J-Link V4.15n (beta) Log File (0001ms, 0605ms total)
+T1A58 000:606 DLL Compiled: Jun 18 2010 19:55:09 (0001ms, 0605ms total)
+T1A58 000:606 Logging started @ 2013-05-04 19:42 (0001ms, 0605ms total)
+T1A58 000:607 JLINK_SetWarnOutHandler(...) (0000ms, 0606ms total)
+T1A58 000:607 JLINK_OpenEx(...)
+Firmware: J-Link ARM V8 compiled May 20 2010 17:07:46
+Hardware: V8.00
+S/N: 20090626
+Feature(s): RDI,FlashDL,FlashBP,JFlash,GDBFull  returns O.K. (0346ms, 0606ms total)
+T1A58 000:953 JLINK_SetErrorOutHandler(...) (0000ms, 0952ms total)
+T1A58 000:953 JLINK_ExecCommand("ProjectFile = "E:\material\microcontroller\Stm32\红龙开发板\3.实验例程-Example\二、旺宝红龙板基础例程\【07】红龙板_基定时器（带视频）\【07】红龙板_基定时器（带视频）\TimCounter\Project\JLinkSettings.ini"", ...)  returns 0x00 (0010ms, 0952ms total)
+T1A58 000:967 JLINK_ExecCommand("DisableConnectionTimeout", ...)  returns 0x00 (0000ms, 0962ms total)
+T1A58 000:967 JLINK_TIF_Select(JLINKARM_TIF_JTAG)  returns 0x00 (0000ms, 0962ms total)
+T1A58 000:967 JLINK_SetSpeed(500) (0000ms, 0962ms total)
+T1A58 000:967 JLINK_GetHardwareVersion()  returns 0x13880 (0001ms, 0962ms total)
+T1A58 000:968 JLINK_GetDLLVersion()  returns 41514 (0000ms, 0963ms total)
+T1A58 000:968 JLINK_GetFirmwareString(...) (0000ms, 0963ms total)
+T1A58 000:983 JLINK_GetDLLVersion()  returns 41514 (0001ms, 0963ms total)
+T1A58 000:984 JLINK_GetCompileDateTime() (0000ms, 0964ms total)
+T1A58 000:985 JLINK_GetFirmwareString(...) (0000ms, 0964ms total)
+T1A58 000:986 JLINK_GetHardwareVersion()  returns 0x13880 (0000ms, 0964ms total)
+T1A58 000:993 JLINK_Reset()
+  ***** Error: Supply voltage too low (1 Volt is required, Measured: 0.0 Volt).
+Please check target power.No matching core found. (0003ms, 0964ms total)
+T1A58 000:998 JLINK_GetIdData(...) (0000ms, 0967ms total)
