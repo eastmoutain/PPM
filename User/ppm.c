@@ -27,7 +27,7 @@ static uint32_t ch_cnt[RC_CH_NUM] = {0};
 
 void LedInit(void)
 {
-    // PB0 for LED
+    // PB0 for LED, PB1 for ouput
     GPIO_InitTypeDef GPIO_InitStructure;
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
     
@@ -77,14 +77,14 @@ void Timer4Init(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-	/* 基定时器初始化 */
-	TIM_TimeBaseStructure.TIM_Period = TIM_COUNTER - 1;				//计数值
-	TIM_TimeBaseStructure.TIM_Prescaler = TIM_PSC - 1;				//分频系数		 
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;				//时钟分割：寄存器（技术）手册基定时器未讲到。
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;	//计数模式
-	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;			//重复计数值
-    
-	TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);				//初始化TIM
+    /* TIM4 basic Init */
+	TIM_TimeBaseStructure.TIM_Period = TIM_COUNTER - 1;
+    TIM_TimeBaseStructure.TIM_Prescaler = TIM_PSC - 1;
+    TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
+
+	TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
 
     /* TIM3 CH1 */
     TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;
@@ -130,7 +130,7 @@ void Timer4Init(void)
     TIM_ClearFlag(TIM4, TIM_IT_CC4);
     TIM_ITConfig(TIM4,TIM_IT_CC4,ENABLE);
 	
-	TIM_ITConfig(TIM4,TIM_IT_Update,ENABLE);	// disable counter overflow interrupt
+	TIM_ITConfig(TIM4,TIM_IT_Update,ENABLE);
 	TIM_Cmd(TIM4, ENABLE);
 }
 
@@ -174,14 +174,14 @@ void Timer2Init(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	/* 基定时器初始化 */
-	TIM_TimeBaseStructure.TIM_Period = TIM_COUNTER - 1;				//计数值
-	TIM_TimeBaseStructure.TIM_Prescaler = TIM_PSC - 1;				//分频系数		 
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;				//时钟分割：寄存器（技术）手册基定时器未讲到。
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;	//计数模式
-	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;			//重复计数值
+	/* TIM2 basic init */
+	TIM_TimeBaseStructure.TIM_Period = TIM_COUNTER - 1;
+	TIM_TimeBaseStructure.TIM_Prescaler = TIM_PSC - 1;		 
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
     
-	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);				//初始化TIM
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 
     /* TIM2 CH1 */
     TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;
@@ -227,7 +227,7 @@ void Timer2Init(void)
     TIM_ClearFlag(TIM2, TIM_IT_CC4);
     TIM_ITConfig(TIM2,TIM_IT_CC4,ENABLE);
 	
-	TIM_ITConfig(TIM2,TIM_IT_Update,ENABLE); // disable counter overflow interrupt
+	TIM_ITConfig(TIM2,TIM_IT_Update,ENABLE);
 	TIM_Cmd(TIM2, ENABLE);
 }
 
@@ -258,7 +258,7 @@ void Timer2_IRQ(void)
                    
             interval[RC_CH1] = (cnt - ch_cnt[RC_CH1]) * TIM_COUNTER + end[RC_CH1] - start[RC_CH1];
 
-            // limit the scale.
+            // limit the scale to 2sec.
             if (interval[RC_CH1] > 72000)
                 interval[RC_CH1] = 72000;
             
@@ -284,7 +284,7 @@ void Timer2_IRQ(void)
             end[RC_CH2] = TIM_GetCapture2(TIM2);
                    
             interval[RC_CH2] = (cnt - ch_cnt[RC_CH2]) * TIM_COUNTER + end[RC_CH2] - start[RC_CH2];
-            // limit the scale.
+            // limit the scale within 2 secs.
             if (interval[RC_CH2] > 72000)
                 interval[RC_CH2] = 72000;
             
@@ -297,7 +297,7 @@ void Timer2_IRQ(void)
     
     // CH3 PA2 PPM_CH3 
     if (TIM_GetITStatus(TIM2, TIM_IT_CC3) != RESET) {  
-        /* Clear TIM2_CH2 Capture compare interrupt pending bit */  
+        /* Clear TIM2_CH3 Capture compare interrupt pending bit */  
         TIM_ClearITPendingBit(TIM2, TIM_IT_CC3);  
         
         if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_2) == SET) {
@@ -311,7 +311,7 @@ void Timer2_IRQ(void)
             end[RC_CH3] = TIM_GetCapture3(TIM2);
                    
             interval[RC_CH3] = (cnt - ch_cnt[RC_CH3]) * TIM_COUNTER + end[RC_CH3] - start[RC_CH3];
-            // limit the scale.
+            // limit the scale within 2 secs.
             if (interval[RC_CH3] > 72000)
                 interval[RC_CH3] = 72000;
             
@@ -324,7 +324,7 @@ void Timer2_IRQ(void)
     
     // CH4 PA3 PPM_CH4 
     if (TIM_GetITStatus(TIM2, TIM_IT_CC4) != RESET) {  
-        /* Clear TIM2_CH2 Capture compare interrupt pending bit */  
+        /* Clear TIM2_CH4 Capture compare interrupt pending bit */  
         TIM_ClearITPendingBit(TIM2, TIM_IT_CC4);  
         
         if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3) == SET) {
@@ -338,7 +338,7 @@ void Timer2_IRQ(void)
             end[RC_CH4] = TIM_GetCapture4(TIM2);
                    
             interval[RC_CH4] = (cnt - ch_cnt[RC_CH4]) * TIM_COUNTER + end[RC_CH4] - start[RC_CH4];
-            // limit the scale.
+            // limit the scale within 2 secs.
             if (interval[RC_CH4] > 72000)
                 interval[RC_CH4] = 72000;
             
@@ -360,7 +360,7 @@ void Timer4_IRQ(void)
     }   
     // CH1 PB6 RC_CH5
     if (TIM_GetITStatus(TIM4, TIM_IT_CC1) != RESET) {  
-        /* Clear TIM2_CH2 Capture compare interrupt pending bit */  
+        /* Clear TIM2_CH5 Capture compare interrupt pending bit */  
         TIM_ClearITPendingBit(TIM4, TIM_IT_CC1);  
         
         if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_6) == SET) {
@@ -374,7 +374,7 @@ void Timer4_IRQ(void)
             end[RC_CH5] = TIM_GetCapture1(TIM4);
                    
             interval[RC_CH5] = (cnt - ch_cnt[RC_CH5]) * TIM_COUNTER + end[RC_CH5] - start[RC_CH5];
-            // limit the scale.
+            // limit the scale within 2 secs.
             if (interval[RC_CH5] > 72000)
                 interval[RC_CH5] = 72000;
             
@@ -385,9 +385,9 @@ void Timer4_IRQ(void)
         }
     }  
     
-// CH2 PB7 RC_CH6
+    // CH2 PB7 RC_CH6
     if (TIM_GetITStatus(TIM4, TIM_IT_CC2) != RESET) {  
-        /* Clear TIM2_CH2 Capture compare interrupt pending bit */  
+        /* Clear TIM2_CH6 Capture compare interrupt pending bit */  
         TIM_ClearITPendingBit(TIM4, TIM_IT_CC2);  
         
         if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_7) == SET) {
@@ -401,7 +401,7 @@ void Timer4_IRQ(void)
             end[RC_CH6] = TIM_GetCapture2(TIM4);
                    
             interval[RC_CH6] = (cnt - ch_cnt[RC_CH6]) * TIM_COUNTER + end[RC_CH6] - start[RC_CH6];
-            // limit the scale.
+            // limit the scale within 2 secs.
             if (interval[RC_CH6] > 72000)
                 interval[RC_CH6] = 72000;
             
@@ -412,9 +412,9 @@ void Timer4_IRQ(void)
         }
     }
 
-// CH3 PB8 RC_CH7
+    // CH3 PB8 RC_CH7
     if (TIM_GetITStatus(TIM4, TIM_IT_CC3) != RESET) {  
-        /* Clear TIM2_CH2 Capture compare interrupt pending bit */  
+        /* Clear TIM2_CH7 Capture compare interrupt pending bit */  
         TIM_ClearITPendingBit(TIM4, TIM_IT_CC3);  
         
         if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_8) == SET) {
@@ -428,7 +428,7 @@ void Timer4_IRQ(void)
             end[RC_CH7] = TIM_GetCapture3(TIM4);
                    
             interval[RC_CH7] = (cnt - ch_cnt[RC_CH7]) * TIM_COUNTER + end[RC_CH7] - start[RC_CH7];
-            // limit the scale.
+            // limit the scale within 2 secs.
             if (interval[RC_CH7] > 72000)
                 interval[RC_CH7] = 72000;
             
@@ -439,9 +439,9 @@ void Timer4_IRQ(void)
         }
     }
 
-// CH4 PB9 RC_CH8
+    // CH4 PB9 RC_CH8
     if (TIM_GetITStatus(TIM4, TIM_IT_CC4) != RESET) {  
-        /* Clear TIM2_CH2 Capture compare interrupt pending bit */  
+        /* Clear TIM2_CH8 Capture compare interrupt pending bit */  
         TIM_ClearITPendingBit(TIM4, TIM_IT_CC4);  
         
         if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9) == SET) {
@@ -455,7 +455,7 @@ void Timer4_IRQ(void)
             end[RC_CH8] = TIM_GetCapture4(TIM4);
                    
             interval[RC_CH8] = (cnt - ch_cnt[RC_CH8]) * TIM_COUNTER + end[RC_CH8] - start[RC_CH8];
-            // limit the scale.
+            // limit the scale within 2 secs.
             if (interval[RC_CH8] > 72000)
                 interval[RC_CH8] = 72000;
             
@@ -472,19 +472,24 @@ enum PPM_OUTPUT_CH_STATE{
 
 enum PPM_OUTPUT_CH_STATE state = CH_DOWN_STATE;
 
-static uint64_t total_value = 0;
-static uint8_t ch_idx = 0;
+
 #define MS20 (72000 * 20)
 #define MS05  (36000)
+
+static uint64_t total_value = 0;
+static uint8_t ch_idx = 0;
+
 void ppm_output(void){
     uint32_t ch_val = 0;
     
+    /* for CH1 ~ CH8 and the last one low level interval*/
     if (CH_DOWN_STATE == state) {           
         systick_init(MS05);
         total_value += MS05;
         state = CH_UP_STATE;
         GPIO_ResetBits(GPIOB, GPIO_Pin_1);
     } else {
+        /* for channedl CH1 ~ CH8 high level interval */
         if (ch_idx < RC_CH_NUM) {
             if (interval[ch_idx] < (MS05))
                 ch_val = MS05;
@@ -495,6 +500,7 @@ void ppm_output(void){
             total_value += ch_val;
             ch_idx++;
         } else {
+            /* the last long high level interval */
             systick_init(MS20 - total_value);
             total_value = 0;
             ch_idx = 0;
@@ -504,3 +510,4 @@ void ppm_output(void){
         
     }     
 }
+
