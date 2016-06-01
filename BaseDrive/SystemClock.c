@@ -1,34 +1,11 @@
-/******************************************************************
-**	  红龙开发板（V1.0）
-**	  系统时钟配置文件
-**
-**	  论    坛：bbs.openmcu.com
-**	  旺    宝：www.openmcu.com
-**	  邮    箱：support@openmcu.com
-**
-**    版    本：V1.0
-**	  作    者：FXL
-**	  完成日期:	2012.7.20
-********************************************************************/
 #include "stm32f10x.h"
 #include <stdio.h>
 #include "SystemClock.h"
 
-/********************************************************************************************
-*函数名称：void RCC_Configuration(void)
-*
-*入口参数：无
-*
-*出口参数：无
-*
-*功能说明：系统时钟初始化配置
-*	       RCC_HSICmd(ENABLE);//使能内部高速晶振 ;
-* 	       RCC_SYSCLKConfig(RCC_SYSCLKSource_HSI);//选择内部高速时钟作为系统时钟SYSCLOCK=8MHZ	
-*	       RCC_HCLKConfig(RCC_SYSCLK_Div1);       //选择HCLK时钟源为系统时钟SYYSCLOCK
-*  	       RCC_PCLK1Config(RCC_HCLK_Div4);        //APB1时钟为2M 
-*  	       RCC_PCLK2Config(RCC_HCLK_Div4);        //APB2时钟为2M
-*  	       RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , ENABLE);//使能APB2外设GPIOB时钟
-*******************************************************************************************/
+/*
+*   System clock configuration is excuted during system startup before main(),
+*   if you want to reconfig system clock, call this function.
+*/
 void RCC_Configuration(void) 
 {
 	/* RCC system reset(for debug purpose) */
