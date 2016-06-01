@@ -3,7 +3,7 @@
 
 void uart_init(void)
 {
-	USART_InitTypeDef USART_InitStructure;
+    USART_InitTypeDef USART_InitStructure;
 	GPIO_InitTypeDef GPIO_InitStructure;
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
@@ -30,10 +30,13 @@ void uart_init(void)
 
 	USART_Init(USART1, &USART_InitStructure);
 
-	/* Ê¹ÄÜ´®¿Ú3 */
+	/* Enable USART1 */
 	USART_Cmd(USART1, ENABLE);
 }
 
+/*
+*   After define @fputc, you can use "printf()" to send message through USART1 
+*/
 int fputc(int ch, FILE *f)
 {
 	/* Place your implementation of fputc here */
