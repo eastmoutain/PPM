@@ -8,8 +8,13 @@
 
 void systick_init(unsigned int cnt)
 {
-    SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);	//Ê±ÖÓÔ´Ñ¡Ôñ
+	/* select clk source for systick */
+    SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);
+	/* Init systick counter with value @cnt at which
+	*  point it should trigger interrupt
+	*/
     SysTick_Config(cnt);
+	/* clear systick counter */
     SysTick->VAL = 0;
 }
 
