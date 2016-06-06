@@ -38,11 +38,11 @@ void LedInit(void)
 }
 
 /*
-Timer4:
-    CH5 ~ PB6
-    CH6 ~ PB7
-    CH7 ~ PB8
-    CH8 ~ PB9
+*   Timer4:
+*      CH5 ~ PB6
+*      CH6 ~ PB7
+*      CH7 ~ PB8
+*      CH8 ~ PB9
 */
 void Timer4Init(void)
 {
@@ -135,11 +135,11 @@ void Timer4Init(void)
 }
 
 /*
-Timer2:
-    CH1 ~ PA0
-    CH2 ~ PA1
-    CH3 ~ PA2
-    CH4 ~ PA3
+*	Timer2:
+*    	CH1 ~ PA0
+*    	CH2 ~ PA1
+*    	CH3 ~ PA2
+*    	CH4 ~ PA3
 */
 void Timer2Init(void)
 {
@@ -192,7 +192,7 @@ void Timer2Init(void)
     TIM_ICInit(TIM2, &TIM_ICInitStructure);
  
     TIM_ClearFlag(TIM2, TIM_IT_CC1);
-    TIM_ITConfig(TIM2,TIM_IT_CC1,ENABLE);
+    TIM_ITConfig(TIM2, TIM_IT_CC1,ENABLE);
     
     /* TM2 CH2*/
     TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
@@ -203,7 +203,7 @@ void Timer2Init(void)
     TIM_ICInit(TIM2, &TIM_ICInitStructure);
  
     TIM_ClearFlag(TIM2, TIM_IT_CC2);
-    TIM_ITConfig(TIM2,TIM_IT_CC2,ENABLE);
+    TIM_ITConfig(TIM2, TIM_IT_CC2,ENABLE);
 
     /* TM2 CH3*/
     TIM_ICInitStructure.TIM_Channel = TIM_Channel_3;
@@ -214,7 +214,7 @@ void Timer2Init(void)
     TIM_ICInit(TIM2, &TIM_ICInitStructure);
  
     TIM_ClearFlag(TIM2, TIM_IT_CC3);
-    TIM_ITConfig(TIM2,TIM_IT_CC3,ENABLE);
+    TIM_ITConfig(TIM2, TIM_IT_CC3,ENABLE);
 
     /* TM2 CH4*/
     TIM_ICInitStructure.TIM_Channel = TIM_Channel_4;
@@ -225,9 +225,9 @@ void Timer2Init(void)
     TIM_ICInit(TIM2, &TIM_ICInitStructure);
  
     TIM_ClearFlag(TIM2, TIM_IT_CC4);
-    TIM_ITConfig(TIM2,TIM_IT_CC4,ENABLE);
+    TIM_ITConfig(TIM2, TIM_IT_CC4,ENABLE);
 	
-	TIM_ITConfig(TIM2,TIM_IT_Update,ENABLE);
+	TIM_ITConfig(TIM2, TIM_IT_Update,ENABLE);
 	TIM_Cmd(TIM2, ENABLE);
 }
 
@@ -235,6 +235,7 @@ void Timer2Init(void)
 void Timer2_IRQ(void)
 {
     static uint32_t cnt = 0; 
+    
     if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET) {
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
         cnt++;
@@ -275,7 +276,6 @@ void Timer2_IRQ(void)
         
         if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_1) == SET) {
             start[RC_CH2] = TIM_GetCapture2(TIM2);
-            //GPIO_SetBits(GPIOB, GPIO_Pin_0);
             
             TIM_OC2PolarityConfig(TIM2,TIM_ICPolarity_Falling);
             ch_cnt[RC_CH2] = cnt;
@@ -287,8 +287,6 @@ void Timer2_IRQ(void)
             // limit the scale within 2 secs.
             if (interval[RC_CH2] > 72000)
                 interval[RC_CH2] = 72000;
-            
-            //GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 
             TIM_OC2PolarityConfig(TIM2,TIM_ICPolarity_Rising); 
             return;
@@ -302,7 +300,6 @@ void Timer2_IRQ(void)
         
         if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_2) == SET) {
             start[RC_CH3] = TIM_GetCapture3(TIM2);
-            //GPIO_SetBits(GPIOB, GPIO_Pin_0);
             
             TIM_OC3PolarityConfig(TIM2,TIM_ICPolarity_Falling);
             ch_cnt[RC_CH3] = cnt;
@@ -314,8 +311,6 @@ void Timer2_IRQ(void)
             // limit the scale within 2 secs.
             if (interval[RC_CH3] > 72000)
                 interval[RC_CH3] = 72000;
-            
-            //GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 
             TIM_OC3PolarityConfig(TIM2,TIM_ICPolarity_Rising); 
             return;
@@ -329,7 +324,6 @@ void Timer2_IRQ(void)
         
         if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3) == SET) {
             start[RC_CH4] = TIM_GetCapture4(TIM2);
-            //GPIO_SetBits(GPIOB, GPIO_Pin_0);
             
             TIM_OC4PolarityConfig(TIM2,TIM_ICPolarity_Falling);
             ch_cnt[RC_CH4] = cnt;
@@ -341,8 +335,6 @@ void Timer2_IRQ(void)
             // limit the scale within 2 secs.
             if (interval[RC_CH4] > 72000)
                 interval[RC_CH4] = 72000;
-            
-            //GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 
             TIM_OC4PolarityConfig(TIM2,TIM_ICPolarity_Rising); 
             return;
@@ -353,6 +345,7 @@ void Timer2_IRQ(void)
 void Timer4_IRQ(void)
 {
     static uint32_t cnt = 0; 
+    
     if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
         TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
         cnt++;
@@ -365,7 +358,6 @@ void Timer4_IRQ(void)
         
         if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_6) == SET) {
             start[RC_CH5] = TIM_GetCapture1(TIM4);
-            //GPIO_SetBits(GPIOB, GPIO_Pin_0);
             
             TIM_OC1PolarityConfig(TIM4,TIM_ICPolarity_Falling);
             ch_cnt[RC_CH5] = cnt;
@@ -377,11 +369,9 @@ void Timer4_IRQ(void)
             // limit the scale within 2 secs.
             if (interval[RC_CH5] > 72000)
                 interval[RC_CH5] = 72000;
-            
-            //GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 
             TIM_OC1PolarityConfig(TIM4,TIM_ICPolarity_Rising); 
-
+			return;
         }
     }  
     
@@ -392,7 +382,6 @@ void Timer4_IRQ(void)
         
         if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_7) == SET) {
             start[RC_CH6] = TIM_GetCapture2(TIM4);
-            //GPIO_SetBits(GPIOB, GPIO_Pin_0);
             
             TIM_OC2PolarityConfig(TIM4,TIM_ICPolarity_Falling);
             ch_cnt[RC_CH6] = cnt;
@@ -404,11 +393,9 @@ void Timer4_IRQ(void)
             // limit the scale within 2 secs.
             if (interval[RC_CH6] > 72000)
                 interval[RC_CH6] = 72000;
-            
-            //GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 
             TIM_OC2PolarityConfig(TIM4,TIM_ICPolarity_Rising); 
-
+			return;
         }
     }
 
@@ -419,7 +406,6 @@ void Timer4_IRQ(void)
         
         if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_8) == SET) {
             start[RC_CH7] = TIM_GetCapture3(TIM4);
-            //GPIO_SetBits(GPIOB, GPIO_Pin_0);
             
             TIM_OC3PolarityConfig(TIM4,TIM_ICPolarity_Falling);
             ch_cnt[RC_CH7] = cnt;
@@ -431,11 +417,9 @@ void Timer4_IRQ(void)
             // limit the scale within 2 secs.
             if (interval[RC_CH7] > 72000)
                 interval[RC_CH7] = 72000;
-            
-            //GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 
             TIM_OC3PolarityConfig(TIM4,TIM_ICPolarity_Rising); 
-
+			return;
         }
     }
 
@@ -446,7 +430,6 @@ void Timer4_IRQ(void)
         
         if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9) == SET) {
             start[RC_CH8] = TIM_GetCapture4(TIM4);
-            //GPIO_SetBits(GPIOB, GPIO_Pin_0);
             
             TIM_OC4PolarityConfig(TIM4,TIM_ICPolarity_Falling);
             ch_cnt[RC_CH8] = cnt;
@@ -458,32 +441,42 @@ void Timer4_IRQ(void)
             // limit the scale within 2 secs.
             if (interval[RC_CH8] > 72000)
                 interval[RC_CH8] = 72000;
-            
-            //GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 
             TIM_OC4PolarityConfig(TIM4,TIM_ICPolarity_Rising); 
+			return;
         }
     }    
 }
-enum PPM_OUTPUT_CH_STATE{
+
+enum PPM_OUTPUT_CH_STATE {
     CH_DOWN_STATE,
     CH_UP_STATE,
 };
 
-enum PPM_OUTPUT_CH_STATE state = CH_DOWN_STATE;
+static enum PPM_OUTPUT_CH_STATE state = CH_DOWN_STATE;
 
-
+/* 20ms */
 #define MS20 (72000 * 20)
+/* 0.5ms */
 #define MS05  (36000)
 
 static uint64_t total_value = 0;
 static uint8_t ch_idx = 0;
 
+/*
+*	- Continuously send 8 PWMs through GPIO_PB1 pin.
+*	- each pwm pulse's low level width is 0.5ms
+*	  the high level width shouldn't less than
+*	  0.5ms, and greater than 1.5ms.
+*	- the frequence of PPM output signal is 50Hz,
+*	  so the period is 20ms.
+*/
 void ppm_output(void){
     uint32_t ch_val = 0;
     
-    /* for CH1 ~ CH8 and the last one low level interval*/
-    if (CH_DOWN_STATE == state) {           
+    /* for CH1 ~ CH8 and the last one low level interval */
+    if (CH_DOWN_STATE == state) {
+		/* next systick interrupt after 0.5ms */
         systick_init(MS05);
         total_value += MS05;
         state = CH_UP_STATE;
@@ -507,7 +500,6 @@ void ppm_output(void){
         }
         state = CH_DOWN_STATE;
         GPIO_SetBits(GPIOB, GPIO_Pin_1);
-        
     }     
 }
 
